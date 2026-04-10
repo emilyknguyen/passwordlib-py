@@ -1,0 +1,47 @@
+schema_version = "1.1"
+
+[task]
+name = "utility-libraries/passwordlib-py"
+description = """
+Implement a Password History tracking system for the Password Library.
+
+The system must:
+- Track per-user password history with a configurable maximum size (FIFO eviction)
+- Detect exact password reuse by hashing and comparing against stored history
+- Support pluggable storage backends via an abstract interface
+- Validate all inputs (user IDs, passwords) before touching storage
+- Wrap backend failures in a domain-specific error type with cause chaining
+- Handle concurrent reads and writes without data corruption or duplicate entries
+- Detect similar passwords (case variants, trailing digits/spaces, leet-speak) without storing plaintext
+- Verify passwords hashed with different algorithms by reading algorithm/salt/iterations from stored dumps
+"""
+authors = [{name = "emilyknguyen", email = "emilyknguyen@meta.com"}]
+keywords = ["password", "history", "tracking", "security", "hashing"]
+
+[metadata]
+base_commit = "40f2331b03b5adc52a2db1a29826b854855ad60d"
+test_file = "tests/test_tracked_passwords.py"
+test_config = "tests/config.json"
+solution_script = "solution/solve.sh"
+num_tests = 68
+
+[verifier]
+timeout_sec = 600.0
+
+[verifier.env]
+
+[agent]
+timeout_sec = 600.0
+
+[environment]
+build_timeout_sec = 600.0
+cpus = 1
+memory_mb = 2048
+storage_mb = 10240
+gpus = 0
+allow_internet = true
+mcp_servers = []
+
+[environment.env]
+
+[solution.env]

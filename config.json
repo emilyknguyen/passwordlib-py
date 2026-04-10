@@ -1,0 +1,124 @@
+{
+  "test_file": "tests/test_tracked_passwords.py",
+  "test_command": "PYTHONPATH=src python3 -m unittest tests.test_tracked_passwords -v",
+  "categories": {
+    "basic_reuse_detection": {
+      "description": "Core password reuse tracking: add, check, evict, clear (random inputs)",
+      "tests": [
+        "tests.test_tracked_passwords.TestPasswordReuse.test_stored_password_is_detected",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_unstored_password_is_not_detected",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_unknown_user_returns_false",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_multiple_passwords_all_detected",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_users_are_isolated",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_eviction_drops_oldest",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_clear_removes_all",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_clear_unknown_user_no_error",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_history_size_tracks_additions",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_bytes_password",
+        "tests.test_tracked_passwords.TestPasswordReuse.test_default_max_size"
+      ]
+    },
+    "input_validation": {
+      "description": "Reject invalid passwords, user IDs, and configuration; validate across all public methods",
+      "tests": [
+        "tests.test_tracked_passwords.TestInputValidation.test_none_password_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_empty_string_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_empty_bytes_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_whitespace_only_password_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_wrong_password_type_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_none_user_id_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_empty_user_id_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_whitespace_only_user_id_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_invalid_max_size_rejected",
+        "tests.test_tracked_passwords.TestInputValidation.test_check_also_validates_password",
+        "tests.test_tracked_passwords.TestInputValidation.test_check_also_validates_user_id",
+        "tests.test_tracked_passwords.TestInputValidation.test_similar_also_validates_inputs",
+        "tests.test_tracked_passwords.TestInputValidation.test_valid_password_works_after_rejected_invalids"
+      ]
+    },
+    "pluggable_backends": {
+      "description": "Support custom storage backends via abstract interface",
+      "tests": [
+        "tests.test_tracked_passwords.TestPluggableBackend.test_custom_backend_is_used",
+        "tests.test_tracked_passwords.TestPluggableBackend.test_default_backend_without_explicit_arg"
+      ]
+    },
+    "error_handling": {
+      "description": "Backend failures wrapped in PasswordHistoryError with cause chain",
+      "tests": [
+        "tests.test_tracked_passwords.TestErrorHandling.test_append_failure",
+        "tests.test_tracked_passwords.TestErrorHandling.test_get_entries_failure",
+        "tests.test_tracked_passwords.TestErrorHandling.test_size_failure",
+        "tests.test_tracked_passwords.TestErrorHandling.test_clear_failure"
+      ]
+    },
+    "concurrency": {
+      "description": "Thread-safe concurrent reads/writes: no corruption, no lost entries, no cross-user leaks",
+      "tests": [
+        "tests.test_tracked_passwords.TestConcurrency.test_parallel_adds_no_crash",
+        "tests.test_tracked_passwords.TestConcurrency.test_parallel_add_and_check_no_crash",
+        "tests.test_tracked_passwords.TestConcurrency.test_duplicate_password_not_stored_twice",
+        "tests.test_tracked_passwords.TestConcurrency.test_concurrent_different_passwords_all_stored",
+        "tests.test_tracked_passwords.TestConcurrency.test_concurrent_writes_different_users_no_cross_contamination",
+        "tests.test_tracked_passwords.TestConcurrency.test_read_after_concurrent_write_is_consistent"
+      ]
+    },
+    "similarity_detection": {
+      "description": "Detect similar passwords via case, trailing digits/spaces, leet-speak (random inputs)",
+      "tests": [
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_case_variant_detected_random",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_trailing_digits_detected",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_trailing_spaces_detected",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_leet_speak_detected",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_exact_match_also_detected",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_unrelated_password_not_flagged",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_exact_check_ignores_variants",
+        "tests.test_tracked_passwords.TestSimilarityDetection.test_similarity_disabled_raises"
+      ]
+    },
+    "algorithm_rehashing": {
+      "description": "Passwords hashed with different algorithms still verify correctly",
+      "tests": [
+        "tests.test_tracked_passwords.TestAlgorithmRehashing.test_verify_across_algorithm_change",
+        "tests.test_tracked_passwords.TestAlgorithmRehashing.test_two_algorithms_same_password_both_verify"
+      ]
+    },
+    "no_plaintext_storage": {
+      "description": "Anti-gaming: verify real hashing, no plaintext in backend storage",
+      "tests": [
+        "tests.test_tracked_passwords.TestNoPlaintextStorage.test_backend_entries_do_not_contain_plaintext",
+        "tests.test_tracked_passwords.TestNoPlaintextStorage.test_backend_entries_do_not_contain_plaintext_bytes",
+        "tests.test_tracked_passwords.TestNoPlaintextStorage.test_stored_entry_is_parseable_hash_dump",
+        "tests.test_tracked_passwords.TestNoPlaintextStorage.test_different_passwords_produce_different_entries",
+        "tests.test_tracked_passwords.TestNoPlaintextStorage.test_spy_backend_never_receives_plaintext",
+        "tests.test_tracked_passwords.TestSimilarityNoPlaintext.test_similarity_entries_are_parseable",
+        "tests.test_tracked_passwords.TestSimilarityNoPlaintext.test_similarity_entry_does_not_contain_plaintext"
+      ]
+    },
+    "regressions": {
+      "description": "Guards against specific bugs caught during development",
+      "tests": [
+        "tests.test_tracked_passwords.TestRegressions.test_none_password_does_not_reach_hasher",
+        "tests.test_tracked_passwords.TestRegressions.test_empty_password_does_not_reach_hasher",
+        "tests.test_tracked_passwords.TestRegressions.test_concurrent_same_password_produces_single_entry",
+        "tests.test_tracked_passwords.TestRegressions.test_backend_error_wraps_original_cause",
+        "tests.test_tracked_passwords.TestRegressions.test_whitespace_password_does_not_store",
+        "tests.test_tracked_passwords.TestRegressions.test_eviction_does_not_lose_recent_passwords"
+      ]
+    },
+    "behavioral_invariants": {
+      "description": "Properties that must hold for any password input (random data, parametric)",
+      "tests": [
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_add_then_find_roundtrip",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_never_added_never_found",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_eviction_preserves_most_recent",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_similarity_detects_case_from_random_input",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_different_passwords_not_similar",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_validation_rejects_before_any_side_effect",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_multiple_random_roundtrips",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_cross_user_isolation_random",
+        "tests.test_tracked_passwords.TestBehavioralInvariants.test_eviction_with_varying_sizes"
+      ]
+    }
+  }
+}
